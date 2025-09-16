@@ -1,0 +1,53 @@
+<div class="login-wrapper">
+    <div class="login-container">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <h2>Login</h2>
+  
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">User ID</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="Enter UserName"
+          />
+          <small *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            User ID is required
+          </small>
+        </div>
+  
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter Password"
+          />
+          <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Password is required
+          </small>
+        </div>
+  
+        <!-- Buttons -->
+        <div class="form-actions">
+          <button type="button" (click)="resetForm()">Reset</button>
+
+          <button type="submit" [disabled]="loginForm.invalid">Login</button>
+        </div>
+      </form>
+  
+      <!-- Register section -->
+      <div class="register-section">
+        <p>Don’t have an account?</p>
+        <button class="register-btn" [routerLink]="['/register']" routerLinkActive="router-link-active" >Register</button>
+      </div>
+      <div class="register-section">
+        <p>If Forgot Password ?</p>
+        <button class="register-btn" [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" >Forgot Password</button>
+      </div>
+    </div>
+  </div>
+  

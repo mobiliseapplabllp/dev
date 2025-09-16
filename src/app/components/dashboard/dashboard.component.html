@@ -1,0 +1,19 @@
+<div class="dashboard-container">
+  <h1>Employee Dashboard</h1>
+
+  <div class="user-card">
+    <h3>User Details</h3>
+    <div class="user-info">
+      <p><strong>User ID:</strong> {{ user?.userId }}</p>
+      <p><strong>User Name:</strong> {{ user?.userName }}</p>
+      <p><strong>Email:</strong> {{ user?.email }}</p>
+      <p><strong>Status:</strong> {{ user?.status }}</p>
+      <p><strong>DOB:</strong> {{ user?.dob | date:'mediumDate' }}</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+ 
+ <p>&copy; 2024 Your Company. All rights reserved.</p> <button class="logout-btn" (click)="logout()">Logout</button> 
+</footer>

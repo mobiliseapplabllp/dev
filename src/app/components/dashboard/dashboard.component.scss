@@ -1,0 +1,88 @@
+/* Container */
+.dashboard-container {
+  min-height: calc(100vh - 60px); /* leave space for footer */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Heading */
+h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Card */
+.user-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+.user-card h3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.user-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* Footer */
+.footer {
+  height: 60px;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between; /* text left, button right */
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Logout button */
+.logout-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #eee;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #ddd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .user-card {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .footer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: auto;
+    padding: 10px;
+  }
+
+  .logout-btn {
+    margin-top: 8px;
+    width: 100%;
+  }
+}
