@@ -1,7 +1,5 @@
 <div class="dashboard-wrapper">
-  <!-- Sidebar -->
   <div class="overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>
-  
   <div class="sidebar" [class.active]="isSidebarOpen">
     <div class="sidebar-header">
       <div class="profile-section">
@@ -41,9 +39,13 @@
         </a>
       </li>
     </ul>
+    <div>
+      <button class="logout-btn-nav" (click)="logout()">
+        <i class="fa-solid fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content">
     <!-- Navbar -->
     <nav class="navbar">
@@ -60,17 +62,6 @@
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
-        </div>
-        <div class="navbar-right">
-          <div class="profile-dropdown">
-            <button class="profile-btn">
-              <i class="fa-solid fa-user-circle"></i>
-              <span *ngIf="user">{{ user.name || user.username || 'User' }}</span>
-            </button>
-          </div>
-          <button class="logout-btn-nav" (click)="logout()">
-            <i class="fa-solid fa-sign-out-alt"></i> Logout
-          </button>
         </div>
       </div>
     </nav>

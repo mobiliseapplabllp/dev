@@ -14,7 +14,7 @@ Chart.register(...registerables);
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('attendanceChart', { static: true }) attendanceChartRef!: ElementRef<HTMLCanvasElement>;
-  
+
   user: any = null;
   stats: any[] = [];
   isSidebarOpen = false;
@@ -133,6 +133,7 @@ export class DashboardComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Sent!', `Birthday wish sent to ${employee.name}`, 'success');
+        console.log(Swal.fire);
       }
     });
   }

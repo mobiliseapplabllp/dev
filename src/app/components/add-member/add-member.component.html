@@ -90,7 +90,7 @@
 
             <div class="form-group">
               <label for="mobile">Mobile Number *</label>
-              <input type="tel" id="mobile" formControlName="mobile" placeholder="10 digits" />
+              <input type="tel" maxlength="10" id="mobile" formControlName="mobile" placeholder="10 digits" />
               <small *ngIf="memberForm.get('mobile')?.invalid && memberForm.get('mobile')?.touched">
                 Valid 10-digit mobile number is required
               </small>
