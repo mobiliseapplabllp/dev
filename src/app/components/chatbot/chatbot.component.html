@@ -1,0 +1,51 @@
+<div class="chatbot-container">
+  <!-- Chatbot Button -->
+  <button class="chatbot-toggle-btn" [class.rotating]="isRotating" (click)="toggleChat()" [class.open]="isOpen">
+    <i class="fa-solid fa-robot" *ngIf="!isOpen"></i>
+    <i class="fa-solid fa-times" *ngIf="isOpen"></i>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chatbot-window" [class.open]="isOpen">
+    <div class="chatbot-header">
+      <div class="chatbot-title">
+        <i class="fa-solid fa-robot"></i>
+        <h3>AI Assistant</h3>
+      </div>
+    </div>
+    
+    <div class="chatbot-messages" #messagesContainer>
+      <div class="message" *ngFor="let message of messages" [class.user]="message.sender === 'user'" [class.bot]="message.sender === 'bot'">
+        <div class="message-avatar" *ngIf="message.sender === 'bot'">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="message-content">
+          <p>{{ message.text }}</p>
+          <span class="message-time">{{ message.timestamp | date:'short' }}</span>
+        </div>
+        <div class="message-avatar user-avatar" *ngIf="message.sender === 'user'">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+      
+      <div class="typing-indicator" *ngIf="isTyping">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+    
+    <div class="chatbot-input">
+      <input 
+        type="text" 
+        [(ngModel)]="userMessage" 
+        placeholder="Type your message..."
+        (keypress)="onKeyPress($event)"
+        (keyup.enter)="sendMessage()"
+      />
+      <button (click)="sendMessage()" [disabled]="!userMessage.trim()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>

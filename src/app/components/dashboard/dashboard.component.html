@@ -1,19 +1,130 @@
-<div class="dashboard-container">
-  <h1>Employee Dashboard</h1>
+<div class="dashboard-wrapper">
+  <!-- Sidebar -->
+  <div class="overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>
+  
+  <div class="sidebar" [class.active]="isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="profile-section">
+        <div class="profile-icon">
+          <i class="fa-solid fa-user-circle"></i>
+        </div>
+        <div class="profile-info" *ngIf="user">
+          <h3>{{ user.name || user.username || 'User' }}</h3>
+          <p>{{ user.email || 'user@example.com' }}</p>
+        </div>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li [class.active]="currentPage === 'dashboard'">
+        <a (click)="navigateTo('dashboard')">
+          <i class="fa-solid fa-home"></i> Dashboard
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'table-data'">
+        <a (click)="navigateTo('table-data')">
+          <i class="fa-solid fa-table"></i> Table Data
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'attendance'">
+        <a (click)="navigateTo('attendance')">
+          <i class="fa-solid fa-calendar-check"></i> Attendance
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'add-member'">
+        <a (click)="navigateTo('add-member')">
+          <i class="fa-solid fa-user-plus"></i> Add Member
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'memberships'">
+        <a (click)="navigateTo('memberships')">
+          <i class="fa-solid fa-users"></i> All Memberships
+        </a>
+      </li>
+    </ul>
+  </div>
 
-  <div class="user-card">
-    <h3>User Details</h3>
-    <div class="user-info">
-      <p><strong>User ID:</strong> {{ user?.userId }}</p>
-      <p><strong>User Name:</strong> {{ user?.userName }}</p>
-      <p><strong>Email:</strong> {{ user?.email }}</p>
-      <p><strong>Status:</strong> {{ user?.status }}</p>
-      <p><strong>DOB:</strong> {{ user?.dob | date:'mediumDate' }}</p>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <button class="menu-btn" (click)="toggleSidebar()" *ngIf="!isSidebarOpen">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="navbar-left">
+          <a class="navbar-brand">Employee Management System</a>
+          <div class="search-container">
+            <input type="search" class="search-input" placeholder="Search here..." [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()" aria-label="Search" autocomplete="off" />
+            <button class="search-btn" (click)="onSearch()" aria-label="Search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <div class="profile-dropdown">
+            <button class="profile-btn">
+              <i class="fa-solid fa-user-circle"></i>
+              <span *ngIf="user">{{ user.name || user.username || 'User' }}</span>
+            </button>
+          </div>
+          <button class="logout-btn-nav" (click)="logout()">
+            <i class="fa-solid fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
+          <div class="stat-icon" [style.background-color]="stat.color">
+            <span>{{ stat.icon }}</span>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stat.value }}</h3>
+            <p>{{ stat.title }}</p>
+            <span class="stat-change" [style.color]="stat.color">{{ stat.change }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts and Birthday Section -->
+      <div class="dashboard-grid">
+        <!-- Attendance Chart -->
+        <div class="chart-card">
+          <div class="chart-container">
+            <canvas #attendanceChart></canvas>
+          </div>
+        </div>
+
+        <!-- Birthday Wishes Card -->
+        <div class="birthday-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-birthday-cake"></i> Birthday Wishes</h3>
+          </div>
+          <div class="birthday-list">
+            <div class="birthday-item" *ngFor="let employee of birthdayEmployees">
+              <div class="birthday-avatar">{{ employee.avatar }}</div>
+              <div class="birthday-info">
+                <h4>{{ employee.name }}</h4>
+                <p>{{ employee.birthday }}</p>
+              </div>
+              <button class="send-message-btn" (click)="sendBirthdayMessage(employee)">
+                <i class="fa-solid fa-paper-plane"></i> Send Wish
+              </button>
+            </div>
+            <div class="no-birthdays" *ngIf="birthdayEmployees.length === 0">
+              <p>No birthdays today!</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<footer class="footer">
- 
- <p>&copy; 2024 Your Company. All rights reserved.</p> <button class="logout-btn" (click)="logout()">Logout</button> 
-</footer>
+  <!-- Chatbot -->
+  <app-chatbot [isOpen]="isChatbotOpen" (toggle)="toggleChatbot()"></app-chatbot>
+</div>

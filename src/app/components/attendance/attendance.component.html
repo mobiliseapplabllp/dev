@@ -1,0 +1,116 @@
+<div class="page-wrapper">
+  <!-- Sidebar -->
+  <div class="overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>
+  
+  <div class="sidebar" [class.active]="isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="profile-section">
+        <div class="profile-icon">
+          <i class="fa-solid fa-user-circle"></i>
+        </div>
+        <div class="profile-info" *ngIf="user">
+          <h3>{{ user.name || user.username || 'User' }}</h3>
+          <p>{{ user.email || 'user@example.com' }}</p>
+        </div>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li [class.active]="currentPage === 'dashboard'">
+        <a (click)="navigateTo('dashboard')">
+          <i class="fa-solid fa-home"></i> Dashboard
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'table-data'">
+        <a (click)="navigateTo('table-data')">
+          <i class="fa-solid fa-table"></i> Table Data
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'attendance'">
+        <a (click)="navigateTo('attendance')">
+          <i class="fa-solid fa-calendar-check"></i> Attendance
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'add-member'">
+        <a (click)="navigateTo('add-member')">
+          <i class="fa-solid fa-user-plus"></i> Add Member
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'memberships'">
+        <a (click)="navigateTo('memberships')">
+          <i class="fa-solid fa-users"></i> All Memberships
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <button class="menu-btn" (click)="toggleSidebar()" *ngIf="!isSidebarOpen">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="navbar-left">
+          <a class="navbar-brand">Mark Attendance</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-content">
+      <div class="attendance-card">
+        <h2><i class="fa-solid fa-calendar-check"></i> Mark Your Attendance</h2>
+        
+        <form class="attendance-form" (ngSubmit)="markAttendance()">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" [(ngModel)]="attendanceDate" name="date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" [(ngModel)]="selectedStatus" name="status" required>
+              <option value="present">Present</option>
+              <option value="late">Late</option>
+              <option value="absent">Absent</option>
+              <option value="leave">Leave</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="fa-solid fa-check"></i> Mark Attendance
+          </button>
+        </form>
+      </div>
+
+      <div class="attendance-history">
+        <h3>Attendance History</h3>
+        <div class="history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let record of attendanceRecords">
+                <td>{{ record.date }}</td>
+                <td>
+                  <span class="status-badge" [class.present]="record.status === 'present'"
+                    [class.late]="record.status === 'late'"
+                    [class.absent]="record.status === 'absent'">
+                    {{ record.status.charAt(0).toUpperCase() + record.status.slice(1) }}
+                  </span>
+                </td>
+                <td>{{ record.checkIn }}</td>
+                <td>{{ record.checkOut }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

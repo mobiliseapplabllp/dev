@@ -50,18 +50,25 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password })
+    // Send username and password to match backend API
+    const loginData = { username, password };
+    console.log('Sending login request with data:', { username, password: password ? '***' : 'empty' });
+    
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, loginData)
       .pipe(
         tap(response => {
+          console.log('Login response received:', response);
           if (response.success) {
+            console.log('Complete user data received:', response.user);
             this.setToken(response.token);
-            this.setCurrentUser(response.user);
+            this.setCurrentUser(response.user);  // This is crucial!
             this.isAuthenticatedSubject.next(true);
             this.currentUserSubject.next(response.user);
           }
         })
       );
   }
+  
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
@@ -112,10 +119,11 @@ export class AuthService {
   }
 
   // Get all users (protected)
-  getUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users`, { 
-      headers: this.getAuthHeaders() 
-    });
+  getUsers(username : string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/getAllUsers`,
+       { username }, 
+       {headers: this.getAuthHeaders()}
+    );
   }
 
   addUser(username: string, email: string, dob: string, mobile: string, password: string): Observable<any> {
@@ -133,5 +141,11 @@ export class AuthService {
   // Test connection (public endpoint)
   testConnection(): Observable<any> {
     return this.http.get(`${this.apiUrl}/health`);
+  }
+  updatePassword(userId: number, newPassword: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/updatePassword`, 
+      { userId, newPassword }, 
+      { headers: this.getAuthHeaders() }
+    );
   }
 }

@@ -1,0 +1,116 @@
+<div class="page-wrapper">
+  <!-- Sidebar -->
+  <div class="overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>
+  
+  <div class="sidebar" [class.active]="isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="profile-section">
+        <div class="profile-icon">
+          <i class="fa-solid fa-user-circle"></i>
+        </div>
+        <div class="profile-info" *ngIf="user">
+          <h3>{{ user.name || user.username || 'User' }}</h3>
+          <p>{{ user.email || 'user@example.com' }}</p>
+        </div>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li [class.active]="currentRoute === 'dashboard'">
+        <a (click)="navigateTo('dashboard')">
+          <i class="fa-solid fa-home"></i> Dashboard
+        </a>
+      </li>
+      <li [class.active]="currentRoute === 'table-data'">
+        <a (click)="navigateTo('table-data')">
+          <i class="fa-solid fa-table"></i> Table Data
+        </a>
+      </li>
+      <li [class.active]="currentRoute === 'attendance'">
+        <a (click)="navigateTo('attendance')">
+          <i class="fa-solid fa-calendar-check"></i> Attendance
+        </a>
+      </li>
+      <li [class.active]="currentRoute === 'add-member'">
+        <a (click)="navigateTo('add-member')">
+          <i class="fa-solid fa-user-plus"></i> Add Member
+        </a>
+      </li>
+      <li [class.active]="currentRoute === 'memberships'">
+        <a (click)="navigateTo('memberships')">
+          <i class="fa-solid fa-users"></i> All Memberships
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <button class="menu-btn" (click)="toggleSidebar()" *ngIf="!isSidebarOpen">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="navbar-left">
+          <a class="navbar-brand">Table Data</a>
+          <div class="search-container">
+            <input type="search" class="search-input" placeholder="Search..." [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()" (input)="onSearch()" />
+            <button class="search-btn" (click)="onSearch()">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-content">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Join Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of paginatedData">
+              <td>{{ item.id }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.role }}</td>
+              <td>
+                <span class="status-badge" [class.active]="item.status === 'Active'">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td>{{ item.joinDate }}</td>
+              <td>
+                <button class="action-btn edit"><i class="fa-solid fa-edit"></i></button>
+                <button class="action-btn delete"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedData.length === 0">
+              <td colspan="7" class="no-data">No data found</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="totalPages > 1">
+          <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="fa-solid fa-chevron-left"></i> Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

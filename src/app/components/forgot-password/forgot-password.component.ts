@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../providers/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,31 +10,40 @@ import { Router } from '@angular/router';
   styleUrl: './forgot-password.component.scss'
 })
 export class ForgotPasswordComponent {
-  step: number = 1; // track current step
+  step: number = 1; 
   otpSent = false;
   otpForm: FormGroup;
   passwordForm: FormGroup;
   enteredOtp: string = '';
-  dummyOtp: string = '1234';
+  dummyOtp: string = '1111'; // For demo purposes
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    // Form to enter email/phone
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private auth: AuthService
+  ) {
+
     this.otpForm = this.fb.group({
       emailOrPhone: ['', [Validators.required]]
     });
 
     // Form to enter new password after OTP
-    this.passwordForm = this.fb.group({
-      otp: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validator: this.passwordMatchValidator });
+    this.passwordForm = this.fb.group(
+      {
+        id: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordsMatch }
+    );
+    
   }
 
   // Custom validator for password match
-  passwordMatchValidator(form: FormGroup) {
-    return form.get('newPassword')?.value === form.get('confirmPassword')?.value
-      ? null : { mismatch: true };
+  passwordsMatch(group: FormGroup) {
+    const pass = group.get('newPassword')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return pass === confirm ? null : { mismatch: true };
   }
 
   // Send OTP
@@ -63,25 +73,41 @@ export class ForgotPasswordComponent {
       this.passwordForm.markAllAsTouched();
       return;
     }
+    const newPassword = this.passwordForm.value.newPassword;
+    const userId =  this.passwordForm.value.id;
+    this.auth.updatePassword(userId, newPassword).subscribe({
+      next: (response) => {
+        console.log('Password updated successfully', response);
+        this.afterPasswordReset();
+      }
+
+      ,
+      error: (error) => {
+        console.error('Password update failed:', error);
+        alert('Failed to update password. Please try again.');
+      }
+    });
+  }
+
+  afterPasswordReset() {
     console.log('Password reset successfully!');
-    alert('Password reset successful!');
     this.router.navigate(['/login']);
   }
   // Add inside ForgotPasswordComponent
-moveNext(event: any, index: number) {
-  const input = event.target;
-  if (input.value.length === 1 && index < 3) {
-    const nextInput = document.querySelectorAll<HTMLInputElement>('.otp-inputs input')[index + 1];
-    nextInput.focus();
+  moveNext(event: any, index: number) {
+    const input = event.target;
+    if (input.value.length === 1 && index < 3) {
+      const nextInput = document.querySelectorAll<HTMLInputElement>('.otp-inputs input')[index + 1];
+      nextInput.focus();
+    }
   }
-}
 
-verifyOtpFromBoxes(value: string) {
-  if (value === this.dummyOtp) {
-    this.step = 3;
-  } else {
-    alert('Invalid OTP');
+  verifyOtpFromBoxes(value: string) {
+    if (value === this.dummyOtp) {
+      this.step = 3;
+    } else {
+      alert('Invalid OTP');
+    }
   }
-}
 
 }

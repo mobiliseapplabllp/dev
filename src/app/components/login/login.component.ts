@@ -38,23 +38,44 @@ export class LoginComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const { username, password } = this.loginForm.value;
+    let { username, password } = this.loginForm.value;
+    
+    // Trim whitespace from username and password
+    username = username ? username.trim() : '';
+    password = password ? password.trim() : '';
+    
+    // Debug: Check if values are present
+    console.log('Form values:', { username, password: password ? '***' : 'empty' });
+    console.log('Username value:', username, 'Type:', typeof username, 'Length:', username.length);
+    console.log('Password value:', password ? '***' : 'empty', 'Type:', typeof password, 'Length:', password.length);
+
+    if (!username || !password || username.length === 0 || password.length === 0) {
+      alert('Please enter both username and password');
+      this.isLoading = false;
+      return;
+    }
 
     this.authService.login(username, password).subscribe({
       next: (response: LoginResponse) => {
         console.log('Login successful:', response);
-        localStorage.setItem('token', response.token);
-        // localStorage.setItem('userid', response.userid);
-        this.router.navigate(['/dashboard']);
+        if (response.success && response.token) {
+          // Auth service will handle token storage
+          if (response.user) {
+            // Auth service will handle user storage
+          }
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        } else {
+          console.error('Login failed:', response.message || 'Invalid response');
+          alert(response.message || 'Login failed! Please check your credentials and try again.');
+          this.isLoading = false;
+        }
       },
       error: (error: any) => {
         console.error('Login failed:', error);
-        alert('Login failed! Please check your credentials and try again.');
+        const errorMessage = error?.error?.message || error?.message || 'Login failed! Please check your credentials and try again.';
+        alert(errorMessage);
         this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
       }
     });
   }

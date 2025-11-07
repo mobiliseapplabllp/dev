@@ -40,6 +40,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;  // <-- already correct placement
+    console.log('Mobile errors:', this.f['mobile'].errors, 'Value:', `"${this.f['mobile'].value}"`);
 
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();

@@ -1,0 +1,117 @@
+<div class="page-wrapper">
+  <!-- Sidebar -->
+  <div class="overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>
+  
+  <div class="sidebar" [class.active]="isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="profile-section">
+        <div class="profile-icon">
+          <i class="fa-solid fa-user-circle"></i>
+        </div>
+        <div class="profile-info" *ngIf="user">
+          <h3>{{ user.name || user.username || 'User' }}</h3>
+          <p>{{ user.email || 'user@example.com' }}</p>
+        </div>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li [class.active]="currentPage === 'dashboard'">
+        <a (click)="navigateTo('dashboard')">
+          <i class="fa-solid fa-home"></i> Dashboard
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'table-data'">
+        <a (click)="navigateTo('table-data')">
+          <i class="fa-solid fa-table"></i> Table Data
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'attendance'">
+        <a (click)="navigateTo('attendance')">
+          <i class="fa-solid fa-calendar-check"></i> Attendance
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'add-member'">
+        <a (click)="navigateTo('add-member')">
+          <i class="fa-solid fa-user-plus"></i> Add Member
+        </a>
+      </li>
+      <li [class.active]="currentPage === 'memberships'">
+        <a (click)="navigateTo('memberships')">
+          <i class="fa-solid fa-users"></i> All Memberships
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <button class="menu-btn" (click)="toggleSidebar()" *ngIf="!isSidebarOpen">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="navbar-left">
+          <a class="navbar-brand">All Memberships</a>
+          <div class="search-container">
+            <input type="search" class="search-input" placeholder="Search members..." [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()" (input)="onSearch()" />
+            <button class="search-btn" (click)="onSearch()">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-content">
+      <div class="memberships-grid">
+        <div class="membership-card" *ngFor="let member of filteredMembers">
+          <div class="membership-header">
+            <div class="member-avatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="member-info">
+              <h3>{{ member.name }}</h3>
+              <p>{{ member.email }}</p>
+            </div>
+          </div>
+          
+          <div class="membership-details">
+            <div class="detail-item">
+              <span class="label">Role:</span>
+              <span class="value role-badge" [class.premium]="member.role === 'Premium'"
+                [class.standard]="member.role === 'Standard'"
+                [class.basic]="member.role === 'Basic'">
+                {{ member.role }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Status:</span>
+              <span class="value status-badge" [class.active]="member.status === 'Active'">
+                {{ member.status }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Join Date:</span>
+              <span class="value">{{ member.joinDate }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Expiry Date:</span>
+              <span class="value">{{ member.expiryDate }}</span>
+            </div>
+          </div>
+
+          <div class="membership-actions">
+            <button class="action-btn view"><i class="fa-solid fa-eye"></i> View</button>
+            <button class="action-btn edit"><i class="fa-solid fa-edit"></i> Edit</button>
+          </div>
+        </div>
+
+        <div class="no-members" *ngIf="filteredMembers.length === 0">
+          <i class="fa-solid fa-users-slash"></i>
+          <p>No members found</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
